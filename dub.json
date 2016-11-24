@@ -1,0 +1,10 @@
+{
+    "name": "progress",
+    "authors": [
+        "kotet"
+    ],
+    "targetType": "library",
+    "description": "Porting Python progress library to D.",
+    "copyright": "Copyright © 2016, kotet",
+    "license": "ISC"
+}
