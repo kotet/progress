@@ -46,7 +46,7 @@ class Infinite
     }
     void start()
     {
-        
+        file.writeln();
     }
     void finish()
     {
@@ -54,6 +54,7 @@ class Infinite
         {
             file.write(SHOW_CURSOR);
         }
+        file.writeln();
     }
     void next(size_t n=1)
     {
