@@ -14,7 +14,6 @@ class Bar : Progress
     string bar_suffix;
     string empty_fill;
     string fill;
-    bool hide_cursor;
 
     this()
     {
@@ -43,7 +42,7 @@ class Bar : Progress
             empty,
             this.bar_suffix,
             suffix].join("");
-        file.write("\r\x1b[K",line);
+        this.write(line);
     }
 }
 class ChargingBar : Bar
@@ -105,7 +104,7 @@ class IncrementalBar : Bar
             empty,
             this.bar_suffix,
             suffix].join("");
-            file.write("\r\x1b[K",line);
+            this.write(line);
     }
 }
 class ShadyBar : IncrementalBar
