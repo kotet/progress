@@ -29,6 +29,7 @@ class Infinite
         this.index = 0;
         this.sw.start();
         ts = 0;
+        if (hide_cursor) file.write(HIDE_CURSOR);
     }
 
     @property real avg()
@@ -47,7 +48,7 @@ class Infinite
     }
     void start()
     {
-        file.writeln();
+
     }
     void finish()
     {
