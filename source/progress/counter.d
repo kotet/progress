@@ -48,6 +48,7 @@ class Pie : Stack
 {
     this()
     {
+        super();
         this.phases = ["○", "◔", "◑", "◕", "●"];
     }
 }

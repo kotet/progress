@@ -8,7 +8,6 @@ import std.algorithm : max;
 class Bar : Progress
 {
     size_t width = 32;
-    string delegate() message;
     string delegate() suffix;
     string bar_prefix;
     string bar_suffix;
@@ -36,7 +35,6 @@ class Bar : Progress
         string empty = repeat(this.empty_fill,empty_length);
         string suffix = this.suffix();
         string line = [
-            message,
             this.bar_prefix,
             bar,
             empty,
@@ -91,13 +89,11 @@ class IncrementalBar : Bar
         size_t empty_length = this.width - filled_length;
         size_t phase = expanded_length - (filled_length * nphases);
 
-        string message = this.message();
         string bar = repeat(phases.back, filled_length);
         string current = (0<=phase)?this.phases[phase]:"";
         string empty = repeat(this.empty_fill, std.algorithm.max(0,empty_length));
         string suffix = this.suffix();
         string line = [
-            message,
             this.bar_prefix,
             bar,
             current,

@@ -23,10 +23,12 @@ class Infinite
     long[] dt;
     bool hide_cursor = false;
     size_t _width;
+    string delegate() message;
 
     this()
     {
         this.index = 0;
+        this.message = {return "";};
         this.sw.start();
         ts = 0;
         if (hide_cursor) file.write(HIDE_CURSOR);
@@ -87,8 +89,9 @@ class Infinite
     void write(string s)
     {
         string b = repeat("\b",_width);
-        file.write(b,s);
-        this._width = s.length;
+        string message = this.message();
+        file.write(b,message,s);
+        this._width = message.length + s.length;
         file.flush();
     }
 }
