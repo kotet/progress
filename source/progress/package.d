@@ -9,6 +9,7 @@ import std.datetime;
 import std.algorithm;
 import std.concurrency;
 import std.math;
+import std.string : countchars;
 
 immutable SHOW_CURSOR = "\x1b[?25h";
 immutable HIDE_CURSOR = "\x1b[?25l";
@@ -23,6 +24,7 @@ class Infinite
     long[] dt;
     bool hide_cursor = false;
     size_t _width;
+    size_t _height;
     string delegate() message;
 
     this()
@@ -93,6 +95,12 @@ class Infinite
         file.write(b,message,s);
         this._width = message.length + s.length;
         file.flush();
+    }
+    void writeln(string s)
+    {
+        file.write(repeat("\r\x1b[K\x1b[1A",_height));
+        file.write(s);
+        _height = s.countchars("\n");
     }
 }
 
