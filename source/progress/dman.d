@@ -1,7 +1,6 @@
 module progress.dman;
 import progress;
 
-import std.string : countchars;
 import std.regex : regex,replaceAll;
 
 immutable string[] DMANS = [
@@ -51,7 +50,6 @@ q"{
 
 class DmanSpinner : Infinite
 {
-    size_t _height=0;
     this()
     {
         this.message = {return "";};
@@ -61,10 +59,8 @@ class DmanSpinner : Infinite
     override void update()
     {
         size_t i = this.index % DMANS.length;
-        file.write(repeat("\r\x1b[K\x1b[1A",_height));
         string message = this.message();
         string padding = "\n" ~ repeat(" ",message.length);
-        file.write(message,DMANS[i].replaceAll(regex(r"\n","g"), padding));
-        _height = DMANS[i].countchars("\n");
+        this.writeln(message ~ DMANS[i].replaceAll(regex(r"\n","g"), padding));
     }
 }
