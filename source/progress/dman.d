@@ -4,8 +4,7 @@ import progress;
 import std.regex : regex,replaceAll;
 
 immutable string[] DMANS = [
-q"{
-
+`
       ____
       L__L|
       /    \
@@ -23,10 +22,8 @@ q"{
     /     \
     \     /
    _ \   /__
-  |__/  |__/
-}",
-q"{
-      ____
+  |__/  |__/`,
+`      ____
       L__L|
       /    \
     /        \
@@ -44,8 +41,7 @@ q"{
      |   |
      |   |
    _ |   |__
-  |__/  |__/
-}"
+  |__/  |__/`
 ];
 
 class DmanSpinner : Infinite
