@@ -10,6 +10,7 @@ import std.algorithm;
 import std.concurrency;
 import std.math;
 import std.string : countchars;
+import std.range : isInfinite,isInputRange,ElementType;
 
 immutable SHOW_CURSOR = "\x1b[?25h";
 immutable HIDE_CURSOR = "\x1b[?25l";
@@ -75,13 +76,14 @@ class Infinite
         this.index += n;
         this.update();
     }
-    auto iter(T)(T[] it)
+    auto iter(R)(R it) if(isInputRange!R && !isInfinite!R)
     {
-        return new Generator!T(
+        return new Generator!(ElementType!R)(
         {
-            foreach(x;it)
+            foreach(i;0 .. it.length)
             {
-                yield(x);
+                yield(it.front);
+                it.popFront();
                 this.next();
             }
             this.finish();
@@ -137,20 +139,15 @@ class Progress : Infinite
         size_t incr = index - this.index;
         this.next(incr);
     }
-    auto iter(T)(T[] it)
+    auto iter(R)(R it) if (isInputRange!R && !isInfinite!R)
     {
-        try{
-            this.max = it.length;
-        }
-        catch (Exception e)
+        this.max = it.length;
+        return new Generator!(ElementType!R)(
         {
-            
-        }
-        return new Generator!T(
-        {
-            foreach(x;it)
+            foreach(i;0 .. it.length)
             {
-                yield(x);
+                yield(it.front);
+                it.popFront();
                 this.next();
             }
             this.finish();
