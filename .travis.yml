@@ -5,4 +5,5 @@ d:
   - ldc
 
 script:
-  - dub build  --compiler=${DC}
+  - dub build --compiler=${DC}
+  - dub build --compiler=${DC} --root=examples/bar/

@@ -1,0 +1,14 @@
+{
+    "name": "bar",
+    "authors": [
+        "kotet"
+    ],
+    "description": "example application",
+    "copyright": "Copyright © 2016, kotet",
+    "license": "ISC",
+    "dependencies": {
+        "progress": {
+            "path": "../../"
+        }
+    }
+}
