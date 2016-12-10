@@ -5,7 +5,7 @@
 [![LICENSE](https://img.shields.io/dub/l/progress.svg)](http://code.dlang.org/packages/progress)
 
 Easy progress reporting for D inspired by [Python's one with the same name](https://pypi.python.org/pypi/progress).  
-There are 6 progress bar, 4 spinner, and 4 counter.
+There are 6 progress bar, 4 spinner, 4 counter, and... Dman.
 
 ## Progress bar 
  - Bar
@@ -26,3 +26,6 @@ There are 6 progress bar, 4 spinner, and 4 counter.
  - Countdown
  - Stack
  - Pie
+
+## Dman
+ - DmanSpinner
