@@ -3,7 +3,7 @@ import progress;
 
 import std.regex : regex,replaceAll;
 
-immutable string[] DMANS = [
+private immutable string[] DMANS = [
 `
       ____
       L__L|
