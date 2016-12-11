@@ -8,3 +8,4 @@ script:
   - dub build --compiler=${DC}
   - dub build --compiler=${DC} --root=examples/bar/
   - dub build --compiler=${DC} --root=examples/spinner/
+  - dub build --compiler=${DC} --root=examples/counter/
