@@ -1,0 +1,14 @@
+{
+    "name": "counter",
+    "authors": [
+        "kotet"
+    ],
+    "dependencies": {
+        "progress": {
+            "path": "../../"
+        }
+    },
+    "description": "example application",
+    "copyright": "Copyright © 2016, kotet",
+    "license": "ISC"
+}
