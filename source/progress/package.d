@@ -9,91 +9,104 @@ import std.datetime;
 import std.algorithm;
 import std.concurrency;
 import std.math;
+import std.string : countchars;
+import std.range : isInfinite,isInputRange,ElementType;
 
-immutable SHOW_CURSOR = "\x1b[?25h";
-immutable HIDE_CURSOR = "\x1b[?25l";
+package immutable SHOW_CURSOR = "\x1b[?25h";
+package immutable HIDE_CURSOR = "\x1b[?25l";
 
 class Infinite
 {
-    alias file = stderr;
-    size_t sma_window = 10;
-    size_t index;
-    StopWatch sw;
-    long ts;
-    long[] dt;
-    bool hide_cursor = false;
-    size_t _width;
-    string delegate() message;
+    private:
+        size_t sma_window = 10;
+        StopWatch sw;
+        long ts;
+        long[] dt;
+        size_t _width;
+        size_t _height;
 
-    this()
-    {
-        this.index = 0;
-        this.message = {return "";};
-        this.sw.start();
-        ts = 0;
-        if (hide_cursor) file.write(HIDE_CURSOR);
-    }
-
-    @property real avg()
-    {
-        return (dt.length == 0)?0:sum(dt) / dt.length / (10 ^^ 6);
-    }
-
-    @property real elapsed()
-    {
-        return sw.peek().usecs / (10 ^^ 6);
-    }
-
-    void update()
-    {
-        
-    }
-    void start()
-    {
-
-    }
-    void finish()
-    {
-        if (hide_cursor)
+    protected:
+        alias file = stderr;
+        void write(string s)
         {
-            file.write(SHOW_CURSOR);
+            string b = repeat("\b",_width);
+            string message = this.message();
+            file.write(b,message,s);
+            this._width = message.length + s.length;
             file.flush();
         }
-        file.writeln();
-    }
-    void next(size_t n=1)
-    {
-        if (n > 0)
+        void writeln(string s)
         {
-            long now = sw.peek().usecs;
-            long _dt = (now - ts) / n;
-            this.dt = this.dt[($<sma_window)?0:$-sma_window+1 .. $] ~ _dt;
-            this.ts = now;
+            file.write(repeat("\r\x1b[K\x1b[1A",_height));
+            file.write(s);
+            _height = s.countchars("\n");
         }
-        this.index += n;
-        this.update();
-    }
-    auto iter(T)(T[] it)
-    {
-        return new Generator!T(
+    public:
+        size_t index;
+        bool hide_cursor = false;
+        string delegate() message;
+        this()
         {
-            foreach(x;it)
+            this.index = 0;
+            this.message = {return "";};
+            this.sw.start();
+            ts = 0;
+            if (hide_cursor) file.write(HIDE_CURSOR);
+        }
+
+        @property real avg()
+        {
+            return (dt.length == 0)?0:sum(dt) / dt.length / (10 ^^ 6);
+        }
+
+        @property real elapsed()
+        {
+            return sw.peek().usecs / (10 ^^ 6);
+        }
+
+        void update()
+        {
+            
+        }
+        void start()
+        {
+
+        }
+        void finish()
+        {
+            if (hide_cursor)
             {
-                yield(x);
-                this.next();
+                file.write(SHOW_CURSOR);
+                file.flush();
             }
-            this.finish();
+            file.writeln();
         }
-        );
-    }
-    void write(string s)
-    {
-        string b = repeat("\b",_width);
-        string message = this.message();
-        file.write(b,message,s);
-        this._width = message.length + s.length;
-        file.flush();
-    }
+        void next(size_t n=1)
+        {
+            if (n > 0)
+            {
+                long now = sw.peek().usecs;
+                long _dt = (now - ts) / n;
+                this.dt = this.dt[($<sma_window)?0:$-sma_window+1 .. $] ~ _dt;
+                this.ts = now;
+            }
+            this.index += n;
+            this.update();
+        }
+        auto iter(R)(R it) if(isInputRange!R && !isInfinite!R)
+        {
+            return new Generator!(ElementType!R)(
+            {
+                foreach(i;0 .. it.length)
+                {
+                    yield(it.front);
+                    it.popFront();
+                    this.next();
+                }
+                this.finish();
+            }
+            );
+        }
 }
 
 class Progress : Infinite
@@ -129,20 +142,15 @@ class Progress : Infinite
         size_t incr = index - this.index;
         this.next(incr);
     }
-    auto iter(T)(T[] it)
+    auto iter(R)(R it) if (isInputRange!R && !isInfinite!R)
     {
-        try{
-            this.max = it.length;
-        }
-        catch (Exception e)
+        this.max = it.length;
+        return new Generator!(ElementType!R)(
         {
-            
-        }
-        return new Generator!T(
-        {
-            foreach(x;it)
+            foreach(i;0 .. it.length)
             {
-                yield(x);
+                yield(it.front);
+                it.popFront();
                 this.next();
             }
             this.finish();
@@ -151,7 +159,7 @@ class Progress : Infinite
     }
 }
 
-string repeat(string s,size_t n)
+package string repeat(string s,size_t n)
 {
     string result;
     foreach(i;0 .. n)
