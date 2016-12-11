@@ -37,7 +37,7 @@ class Infinite
         }
         void writeln(string s)
         {
-            file.write(repeat("\r\x1b[K\x1b[1A",_height));
+            file.write(repeat("\r\x1b[1A\x1b[K",_height));
             file.write(s);
             _height = s.countchars("\n");
         }
