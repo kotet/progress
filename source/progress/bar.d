@@ -3,7 +3,7 @@ import progress;
 import std.format : format;
 import std.array : join,back;
 import std.conv : to;
-import std.algorithm : max;
+static import std.algorithm;
 
 class Bar : Progress
 {
