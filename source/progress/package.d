@@ -9,7 +9,7 @@ import std.datetime;
 import std.algorithm;
 import std.concurrency;
 import std.math;
-import std.string : countchars;
+import std.string : countchars,leftJustify;
 import std.range : isInfinite,isInputRange,ElementType;
 
 package immutable SHOW_CURSOR = "\x1b[?25h";
@@ -29,10 +29,10 @@ class Infinite
         alias file = stderr;
         void write(string s)
         {
-            string b = repeat("\b",_width);
             string message = this.message();
-            file.write(b,message,s);
-            this._width = message.length + s.length;
+            string result = (message ~ s).leftJustify(this._width);
+            file.write("\r",result);
+            this._width = max(this._width,(message ~ s).length);
             file.flush();
         }
         void writeln(string s)
