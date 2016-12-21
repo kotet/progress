@@ -4,11 +4,11 @@ public import progress.bar;
 public import progress.counter;
 public import progress.spinner;
 
-import std.stdio;
-import std.datetime;
-import std.algorithm;
-import std.concurrency;
-import std.math;
+import std.stdio : stderr;
+import std.datetime : StopWatch;
+static import std.algorithm;
+import std.concurrency : Generator,yield;
+import std.math : ceil;
 import std.string : countchars,leftJustify;
 import std.range : isInfinite,isInputRange,ElementType;
 import std.range.primitives : walkLength;
@@ -33,7 +33,7 @@ class Infinite
             string message = this.message();
             string result = (message ~ s).leftJustify(this._width);
             file.write("\r",result);
-            this._width = max(this._width,(message ~ s).walkLength);
+            this._width = std.algorithm.max(this._width,(message ~ s).walkLength);
             file.flush();
         }
         void writeln(string s)
@@ -57,7 +57,7 @@ class Infinite
 
         @property real avg()
         {
-            return (dt.length == 0)?0:sum(dt) / dt.length / (10 ^^ 6);
+            return (dt.length == 0)?0:std.algorithm.sum(dt) / dt.length / (10 ^^ 6);
         }
 
         @property real elapsed()
@@ -128,11 +128,11 @@ class Progress : Infinite
     }
     @property real progress()
     {
-        return min(1,cast(real)this.index / this.max);
+        return std.algorithm.min(1,cast(real)this.index / this.max);
     }
     @property real remaining()
     {
-        return std.algorithm.comparison.max(this.max - this.index,0);
+        return std.algorithm.max(this.max - this.index,0);
     }
     override void start()
     {
