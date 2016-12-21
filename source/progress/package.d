@@ -7,7 +7,7 @@ public import progress.spinner;
 import std.stdio : stderr;
 import std.datetime : StopWatch;
 static import std.algorithm;
-import std.concurrency : yield;
+import std.concurrency : Generator,yield;
 import std.math : ceil;
 import std.string : countchars,leftJustify;
 import std.range : isInfinite,isInputRange,ElementType;
