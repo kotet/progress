@@ -11,6 +11,7 @@ import std.concurrency;
 import std.math;
 import std.string : countchars,leftJustify;
 import std.range : isInfinite,isInputRange,ElementType;
+import std.range.primitives : walkLength;
 
 package immutable SHOW_CURSOR = "\x1b[?25h";
 package immutable HIDE_CURSOR = "\x1b[?25l";
@@ -32,7 +33,7 @@ class Infinite
             string message = this.message();
             string result = (message ~ s).leftJustify(this._width);
             file.write("\r",result);
-            this._width = max(this._width,(message ~ s).length);
+            this._width = max(this._width,(message ~ s).walkLength);
             file.flush();
         }
         void writeln(string s)
@@ -66,7 +67,7 @@ class Infinite
 
         void update()
         {
-            
+
         }
         void start()
         {
