@@ -12,6 +12,8 @@ import std.math : ceil;
 import std.string : countchars,leftJustify;
 import std.range : isInfinite,isInputRange,ElementType;
 import std.range.primitives : walkLength;
+import std.conv : to;
+import core.time : Duration;
 
 package immutable SHOW_CURSOR = "\x1b[?25h";
 package immutable HIDE_CURSOR = "\x1b[?25l";
@@ -21,8 +23,8 @@ class Infinite
     private:
         size_t sma_window = 10;
         StopWatch sw;
-        long ts;
-        long[] dt;
+        Duration ts;
+        Duration[] dt;
         size_t _width;
         size_t _height;
 
@@ -51,18 +53,18 @@ class Infinite
             this.index = 0;
             this.message = {return "";};
             this.sw.start();
-            ts = 0;
+            this.ts = Duration.zero;
             if (hide_cursor) file.write(HIDE_CURSOR);
         }
 
-        @property real avg()
+        @property Duration avg()
         {
-            return (dt.length == 0)?0:std.algorithm.sum(dt) / dt.length / (10 ^^ 6);
+            return (dt.length == 0)?Duration.zero:std.algorithm.reduce!((a,b){return a+b;})(dt) / dt.length;
         }
 
-        @property real elapsed()
+        @property Duration elapsed()
         {
-            return sw.peek().usecs / (10 ^^ 6);
+            return sw.peek().to!Duration;
         }
 
         void update()
@@ -86,8 +88,8 @@ class Infinite
         {
             if (n > 0)
             {
-                long now = sw.peek().usecs;
-                long _dt = (now - ts) / n;
+                Duration now = sw.peek().to!Duration;
+                Duration _dt = (now - ts) / n;
                 this.dt = this.dt[($<sma_window)?0:$-sma_window+1 .. $] ~ _dt;
                 this.ts = now;
             }
@@ -118,9 +120,9 @@ class Progress : Infinite
         this.max = max;
     }
 
-    @property long eta()
+    @property Duration eta()
     {
-        return cast(long)ceil(this.avg * this.remaining);
+        return this.avg * this.remaining;
     }
     @property real percent()
     {
@@ -130,7 +132,7 @@ class Progress : Infinite
     {
         return std.algorithm.min(1,cast(real)this.index / this.max);
     }
-    @property real remaining()
+    @property size_t remaining()
     {
         return std.algorithm.max(this.max - this.index,0);
     }
