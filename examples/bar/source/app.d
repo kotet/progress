@@ -1,5 +1,6 @@
 import core.thread : Thread,dur;
 import std.range : iota,array;
+import std.conv : to;
 import progress.bar;
 
 void main()
@@ -18,6 +19,7 @@ void main()
     {
         ChargingBar cb = new ChargingBar();
         cb.message = {return "Charging bar";};
+        cb.suffix = {return cb.elapsed.to!string;};
         cb.max = 200;
         cb.start();
         foreach(i;0 .. cb.max)
@@ -38,6 +40,7 @@ void main()
     {
         FillingCirclesBar fcb = new FillingCirclesBar();
         fcb.message = {return "Filling circles bar";};
+        fcb.suffix = {return fcb.eta.to!string;};
         foreach(i;fcb.iter(iota(100)))
         {
             Thread.sleep(dur!("msecs")(100));
@@ -46,6 +49,7 @@ void main()
     {
         IncrementalBar ib = new IncrementalBar();
         ib.message = {return "Incremental bar";};
+        ib.suffix = {return ib.avg.to!string;};
         foreach(i;ib.iter(iota(1000)))
         {
             Thread.sleep(dur!("msecs")(10));
