@@ -33,7 +33,6 @@ There are 6 progress bar, 4 spinner, 4 counter, and... Dman.
 # Usage
 ## progress bars
 Call `next` to advance and `finish` to finish.
-
 ```d
 Bar b = new Bar();
 b.message = {return "Processing";};
@@ -115,4 +114,27 @@ class SlowBar : Bar
 }
 ```
 
-Please see example projects if you want to learn more.
+## Spinners
+For actions with an unknown number of steps you can use a spinner:
+```d
+import progress.spinner;
+
+auto s = new Spinner();
+s.message = {return "Loading";};
+while (finished != true)
+{
+    //Do something
+    s.next();
+}
+```
+
+## Counters
+Counters can be used like progress bar.  
+However, `Counter` is the same as spinners, and has no properties that require maximum value.
+
+## Dman
+Same as spinners. it's very big.
+
+---
+
+Please see example projects and source if you want to learn more.
