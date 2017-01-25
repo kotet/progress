@@ -3,46 +3,7 @@ import progress;
 
 import std.regex : regex,replaceAll;
 
-private immutable string[] DMANS = [
-`
-      ____
-      L__L|
-      /    \
-    /        \
-  / _______    \
-  \ \#/  \/ \  /
-   \|#| O| O|#\
-    |#L _L__ #|
-    |###|  |##|
-    /###/  /##|
-   /###/   /##|
-  /###/___/###/
- /###########/
- /##########/
-    /     \
-    \     /
-   _ \   /__
-  |__/  |__/`,
-`      ____
-      L__L|
-      /    \
-    /        \
-  / _______    \
-  \ \#/  \/ \  /
-   \|#| O| O|#\
-    |#L _L__ #|
-    |###|  |##|
-    /###/  /##|
-   /###/   /##|
-  /###/___/###/
- /###########/
- /##########/
-     |   |
-     |   |
-     |   |
-   _ |   |__
-  |__/  |__/`
-];
+private immutable string[] DMANS = [ import("dman0.txt"), import("dman1.txt")];
 
 class DmanSpinner : Infinite
 {
