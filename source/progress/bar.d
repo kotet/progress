@@ -1,8 +1,9 @@
 module progress.bar;
 import progress;
 import std.format : format;
-import std.array : join,back;
+import std.array : join, back;
 import std.conv : to;
+
 static import std.algorithm;
 
 class Bar : Progress
@@ -22,27 +23,25 @@ class Bar : Progress
         empty_fill = " ";
         fill = "#";
         hide_cursor = true;
-        this.message = {return "";};
-        this.suffix = {return format("%s/%s",this.index,this.max);};
-        if(hide_cursor) file.write(HIDE_CURSOR);
+        this.message = { return ""; };
+        this.suffix = { return format("%s/%s", this.index, this.max); };
+        if (hide_cursor)
+            file.write(HIDE_CURSOR);
     }
+
     override void update()
     {
         size_t filled_length = cast(size_t)(this.width * this.progress);
         size_t empty_length = this.width - filled_length;
         string message = this.message();
-        string bar = repeat(this.fill,filled_length);
-        string empty = repeat(this.empty_fill,empty_length);
+        string bar = repeat(this.fill, filled_length);
+        string empty = repeat(this.empty_fill, empty_length);
         string suffix = this.suffix();
-        string line = [
-            this.bar_prefix,
-            bar,
-            empty,
-            this.bar_suffix,
-            suffix].join("");
+        string line = [this.bar_prefix, bar, empty, this.bar_suffix, suffix].join("");
         this.write(line);
     }
 }
+
 class ChargingBar : Bar
 {
     this()
@@ -52,9 +51,10 @@ class ChargingBar : Bar
         bar_suffix = " ";
         empty_fill = "∙";
         fill = "█";
-        suffix = {return this.percent.to!string() ~ "%";};
+        suffix = { return this.percent.to!string() ~ "%"; };
     }
 }
+
 class FillingSquaresBar : ChargingBar
 {
     this()
@@ -64,6 +64,7 @@ class FillingSquaresBar : ChargingBar
         fill = "▣";
     }
 }
+
 class FillingCirclesBar : ChargingBar
 {
     this()
@@ -73,6 +74,7 @@ class FillingCirclesBar : ChargingBar
         fill = "◉";
     }
 }
+
 class IncrementalBar : Bar
 {
     string[] phases;
@@ -81,6 +83,7 @@ class IncrementalBar : Bar
         super();
         phases = [" ", "▏", "▎", "▍", "▌", "▋", "▊", "▉", "█"];
     }
+
     override void update()
     {
         size_t nphases = this.phases.length;
@@ -90,19 +93,14 @@ class IncrementalBar : Bar
         size_t phase = expanded_length - (filled_length * nphases);
 
         string bar = repeat(phases.back, filled_length);
-        string current = (0<=phase)?this.phases[phase]:"";
-        string empty = repeat(this.empty_fill, std.algorithm.max(0,empty_length));
+        string current = (0 <= phase) ? this.phases[phase] : "";
+        string empty = repeat(this.empty_fill, std.algorithm.max(0, empty_length));
         string suffix = this.suffix();
-        string line = [
-            this.bar_prefix,
-            bar,
-            current,
-            empty,
-            this.bar_suffix,
-            suffix].join("");
-            this.write(line);
+        string line = [this.bar_prefix, bar, current, empty, this.bar_suffix, suffix].join("");
+        this.write(line);
     }
 }
+
 class ShadyBar : IncrementalBar
 {
     this()

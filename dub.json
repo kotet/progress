@@ -7,5 +7,7 @@
     "description": "Easy progress reporting for D. There are Progress bar, Spinner, Counter and D-man.",
     "copyright": "Copyright © 2016, kotet",
     "license": "ISC",
-    "stringImportPaths" : ["resources"]
+    "stringImportPaths": [
+        "resources"
+    ]
 }
