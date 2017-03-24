@@ -6,16 +6,18 @@ class Spinner : Infinite
     string[] phases = ["-", "\\", "|", "/"];
     this()
     {
-        this.message = {return "";};
+        this.message = { return ""; };
         hide_cursor = true;
         super();
     }
+
     override void update()
     {
         size_t i = this.index % this.phases.length;
         this.write(this.phases[i]);
     }
 }
+
 class PieSpinner : Spinner
 {
     this()
@@ -23,6 +25,7 @@ class PieSpinner : Spinner
         phases = ["◷", "◶", "◵", "◴"];
     }
 }
+
 class MoonSpinner : Spinner
 {
     this()
@@ -30,6 +33,7 @@ class MoonSpinner : Spinner
         phases = ["◑", "◒", "◐", "◓"];
     }
 }
+
 class LineSpinner : Spinner
 {
     this()
