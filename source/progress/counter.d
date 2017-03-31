@@ -1,8 +1,9 @@
 module progress.counter;
+
 import progress;
 
-import std.conv : to;
 import std.algorithm : min;
+import std.conv : to;
 
 class Counter : Infinite
 {

@@ -1,20 +1,21 @@
 module progress;
 
+import core.time : Duration;
+
 public import progress.bar;
 public import progress.counter;
 public import progress.spinner;
 
-import std.stdio : stderr;
-import std.datetime : StopWatch;
-
 static import std.algorithm;
 import std.concurrency : Generator, yield;
-import std.math : ceil;
-import std.string : countchars, leftJustify;
-import std.range : isInfinite, isInputRange, ElementType;
-import std.range.primitives : walkLength;
 import std.conv : to;
-import core.time : Duration;
+import std.datetime : StopWatch;
+import std.math : ceil;
+import std.range.primitives : walkLength;
+import std.range : ElementType, isInfinite, isInputRange;
+import std.stdio : stderr;
+import std.string : countchars, leftJustify;
+
 
 package immutable SHOW_CURSOR = "\x1b[?25h";
 package immutable HIDE_CURSOR = "\x1b[?25l";
