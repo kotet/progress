@@ -1,10 +1,11 @@
 module progress.bar;
+
 import progress;
-import std.format : format;
-import std.array : join, back;
-import std.conv : to;
 
 static import std.algorithm;
+import std.array : back, join;
+import std.conv : to;
+import std.format : format;
 
 class Bar : Progress
 {
