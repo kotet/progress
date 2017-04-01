@@ -20,7 +20,7 @@ import std.string : countchars, leftJustify;
 package immutable SHOW_CURSOR = "\x1b[?25h";
 package immutable HIDE_CURSOR = "\x1b[?25l";
 
-class Infinite
+package class Infinite
 {
 private:
     size_t sma_window = 10;
@@ -98,8 +98,8 @@ public:
     {
         if (n > 0)
         {
-            Duration now = sw.peek().to!Duration;
-            Duration _dt = (now - ts) / n;
+            immutable Duration now = sw.peek().to!Duration;
+            immutable Duration _dt = (now - ts) / n;
             this.dt = this.dt[($ < sma_window) ? 0 : $ - sma_window + 1 .. $] ~ _dt;
             this.ts = now;
         }
