@@ -87,7 +87,7 @@ class IncrementalBar : Bar
 
     override void update()
     {
-        size_t nphases = this.phases.length;
+        immutable size_t nphases = this.phases.length;
         size_t expanded_length = cast(size_t)(nphases * this.width * this.progress);
         size_t filled_length = cast(size_t)(this.width * this.progress);
         size_t empty_length = this.width - filled_length;
