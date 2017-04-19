@@ -1,6 +1,6 @@
 module progress;
 
-import core.time : Duration;
+import core.time : dur, Duration;
 
 public import progress.bar;
 public import progress.counter;
@@ -16,7 +16,6 @@ import std.range : ElementType, isInfinite, isInputRange;
 import std.stdio : stderr;
 import std.string : countchars, leftJustify;
 
-
 package immutable SHOW_CURSOR = "\x1b[?25h";
 package immutable HIDE_CURSOR = "\x1b[?25l";
 
@@ -29,6 +28,7 @@ private:
     Duration[] dt;
     size_t _width;
     size_t _height;
+    Duration last_draw;
 
 protected:
     alias file = stderr;
@@ -52,14 +52,17 @@ public:
     size_t index;
     bool hide_cursor = false;
     string delegate() message;
+    Duration refresh_rate = dur!"seconds"(1) / 60;
     this()
     {
         this.index = 0;
         this.message = { return ""; };
         this.sw.start();
         this.ts = Duration.zero;
+        this.last_draw = Duration.zero;
         if (hide_cursor)
             file.write(HIDE_CURSOR);
+        stderr.writeln(refresh_rate - last_draw);
     }
 
     @property Duration avg()
@@ -76,7 +79,15 @@ public:
 
     void update()
     {
+        if (refresh_rate < sw.peek() - this.last_draw)
+        {
+            this.last_draw = sw.peek().to!Duration;
+            force_update();
+        }
+    }
 
+    void force_update()
+    {
     }
 
     void start()
@@ -86,6 +97,7 @@ public:
 
     void finish()
     {
+        force_update();
         if (hide_cursor)
         {
             file.write(SHOW_CURSOR);

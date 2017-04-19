@@ -14,7 +14,7 @@ class DmanSpinner : Infinite
         super();
     }
 
-    override void update()
+    override void force_update()
     {
         size_t i = this.index % DMANS.length;
         string message = this.message();
