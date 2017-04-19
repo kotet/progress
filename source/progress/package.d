@@ -62,7 +62,6 @@ public:
         this.last_draw = Duration.zero;
         if (hide_cursor)
             file.write(HIDE_CURSOR);
-        stderr.writeln(refresh_rate - last_draw);
     }
 
     @property Duration avg()
