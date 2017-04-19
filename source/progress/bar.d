@@ -30,7 +30,7 @@ class Bar : Progress
             file.write(HIDE_CURSOR);
     }
 
-    override void update()
+    override void force_update()
     {
         size_t filled_length = cast(size_t)(this.width * this.progress);
         size_t empty_length = this.width - filled_length;
@@ -85,7 +85,7 @@ class IncrementalBar : Bar
         phases = [" ", "▏", "▎", "▍", "▌", "▋", "▊", "▉", "█"];
     }
 
-    override void update()
+    override void force_update()
     {
         immutable size_t nphases = this.phases.length;
         size_t expanded_length = cast(size_t)(nphases * this.width * this.progress);
