@@ -162,7 +162,7 @@ class Progress : Infinite
 
     override void start()
     {
-        this.update();
+        this.force_update();
     }
 
     void goto_index(size_t index)
