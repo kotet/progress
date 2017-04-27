@@ -22,12 +22,13 @@ void main()
         cb.suffix = { return cb.elapsed.to!string; };
         cb.max = 200;
         cb.start();
+        scope (exit)
+            cb.finish();
         foreach (i; 0 .. cb.max)
         {
             Thread.sleep(dur!("msecs")(50));
             cb.next();
         }
-        cb.finish();
     }
     {
         FillingSquaresBar fsb = new FillingSquaresBar();

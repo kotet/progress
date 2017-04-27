@@ -16,32 +16,35 @@ void main()
     }
     {
         PieSpinner ps = new PieSpinner();
+        scope (exit)
+            ps.finish();
         foreach (i; 0 .. 100)
         {
             Thread.sleep(dur!("msecs")(100));
             ps.message = { return format("Pie spinner %s/100:", i + 1); };
             ps.next();
         }
-        ps.finish();
     }
     {
         MoonSpinner ms = new MoonSpinner();
+        scope (exit)
+            ms.finish();
         foreach (i; 0 .. 100)
         {
             Thread.sleep(dur!("msecs")(100));
             ms.message = { return format("Moon spinner %s/100:", i + 1); };
             ms.next();
         }
-        ms.finish();
     }
     {
         LineSpinner ls = new LineSpinner();
+        scope (exit)
+            ls.finish();
         foreach (i; 0 .. 100)
         {
             Thread.sleep(dur!("msecs")(100));
             ls.message = { return format("Line spinner %s/100:", i + 1); };
             ls.next();
         }
-        ls.finish();
     }
 }
