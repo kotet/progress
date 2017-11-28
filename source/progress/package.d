@@ -9,12 +9,11 @@ public import progress.spinner;
 static import std.algorithm;
 import std.concurrency : Generator, yield;
 import std.conv : to;
-import std.datetime : StopWatch;
 import std.math : ceil;
 import std.range.primitives : walkLength;
 import std.range : ElementType, isInfinite, isInputRange;
 import std.stdio : stderr;
-import std.string : countchars, leftJustify;
+import std.string : leftJustify;
 
 package immutable SHOW_CURSOR = "\x1b[?25h";
 package immutable HIDE_CURSOR = "\x1b[?25l";
@@ -23,7 +22,16 @@ package class Infinite
 {
 private:
     size_t sma_window = 10;
-    StopWatch sw;
+    static if (2077 <= __VERSION__)
+    {
+        import std.datetime.stopwatch;
+        StopWatch sw;
+    }
+    else
+    {
+        import std.datetime;
+        StopWatch sw;
+    }
     Duration ts;
     Duration[] dt;
     size_t _width;
@@ -45,7 +53,7 @@ protected:
     {
         file.write("\r\x1b[K", repeat("\x1b[1A\x1b[K", _height));
         file.write(s);
-        _height = s.countchars("\n");
+        _height = std.algorithm.count(s,"\n");
     }
 
 public:
