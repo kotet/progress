@@ -15,7 +15,7 @@ class Counter : Infinite
 
     override void force_update()
     {
-        this.write(this.index.to!string);
+        this.writeln(this.index.to!string);
     }
 }
 
@@ -29,7 +29,7 @@ class Countdown : Progress
 
     override void force_update()
     {
-        this.write(this.remaining.to!string);
+        this.writeln(this.remaining.to!string);
     }
 }
 
@@ -47,7 +47,7 @@ class Stack : Progress
     {
         size_t nphases = this.phases.length;
         size_t index = min(nphases - 1, cast(size_t)(this.progress * nphases));
-        this.write(this.phases[index]);
+        this.writeln(this.phases[index]);
     }
 }
 

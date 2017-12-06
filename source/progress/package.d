@@ -25,11 +25,13 @@ private:
     static if (2077 <= __VERSION__)
     {
         import std.datetime.stopwatch;
+
         StopWatch sw;
     }
     else
     {
         import std.datetime;
+
         StopWatch sw;
     }
     Duration ts;
@@ -40,20 +42,11 @@ private:
 
 protected:
     alias file = stderr;
-    void write(string s)
-    {
-        string message = this.message();
-        string result = (message ~ s).leftJustify(this._width);
-        file.write("\r", result);
-        this._width = std.algorithm.max(this._width, (message ~ s).walkLength);
-        file.flush();
-    }
-
     void writeln(string s)
     {
         file.write("\r\x1b[K", repeat("\x1b[1A\x1b[K", _height));
         file.write(s);
-        _height = std.algorithm.count(s,"\n");
+        _height = std.algorithm.count(s, "\n");
     }
 
 public:
