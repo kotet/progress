@@ -38,8 +38,8 @@ class Bar : Progress
         string bar = repeat(this.fill, filled_length);
         string empty = repeat(this.empty_fill, empty_length);
         string suffix = this.suffix();
-        string line = [this.bar_prefix, bar, empty, this.bar_suffix, suffix].join("");
-        this.write(line);
+        string line = [message, this.bar_prefix, bar, empty, this.bar_suffix, suffix].join("");
+        this.writeln(line);
     }
 }
 
@@ -93,12 +93,14 @@ class IncrementalBar : Bar
         size_t empty_length = this.width - filled_length;
         size_t phase = expanded_length - (filled_length * nphases);
 
+        string message = this.message();
         string bar = repeat(phases.back, filled_length);
         string current = (phase <= nphases) ? this.phases[phase] : "";
         string empty = repeat(this.empty_fill, std.algorithm.max(0, empty_length));
         string suffix = this.suffix();
-        string line = [this.bar_prefix, bar, current, empty, this.bar_suffix, suffix].join("");
-        this.write(line);
+        string line = [message, this.bar_prefix, bar, current, empty, this.bar_suffix, suffix].join(
+                "");
+        this.writeln(line);
     }
 }
 

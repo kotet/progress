@@ -14,7 +14,7 @@ class Spinner : Infinite
     override void force_update()
     {
         size_t i = this.index % this.phases.length;
-        this.write(this.phases[i]);
+        this.writeln(this.phases[i]);
     }
 }
 
