@@ -15,8 +15,11 @@ import std.range : ElementType, isInfinite, isInputRange;
 import std.stdio : stderr;
 import std.string : leftJustify;
 
-package immutable SHOW_CURSOR = "\x1b[?25h";
-package immutable HIDE_CURSOR = "\x1b[?25l";
+package enum SHOW_CURSOR = "\x1b[?25h";
+package enum HIDE_CURSOR = "\x1b[?25l";
+package enum LINEFEED = "\r";
+package enum ERASE_IN_LINE = "\x1b[K";
+package enum CURSOR_UP = "\x1b[1A";
 
 package class Infinite
 {
@@ -44,7 +47,7 @@ protected:
     alias file = stderr;
     void writeln(string s)
     {
-        file.write("\r\x1b[K", repeat("\x1b[1A\x1b[K", _height));
+        file.write(LINEFEED ~ ERASE_IN_LINE, repeat(CURSOR_UP ~ ERASE_IN_LINE, _height));
         file.write(s);
         _height = std.algorithm.count(s, "\n");
     }
