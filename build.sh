@@ -10,7 +10,11 @@ else
     DC=dmd
 fi
 
-for dir in `find . -name dub.json | grep -v "\.dub" | xargs dirname`; do
+echo
+echo "Running 'dub build --compiler=$DC --root=.' ..."
+dub build --compiler=$DC --root=.
+
+for dir in $(find . -name dub.json | grep -v "\.dub" | xargs dirname | grep -v -e ^\.$); do
     echo
     echo "Running 'dub build --compiler=$DC --root=$dir' ..."
     dub build --compiler=$DC --root=$dir
