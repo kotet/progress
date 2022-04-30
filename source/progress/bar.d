@@ -4,7 +4,7 @@ import progress;
 
 static import std.algorithm;
 import std.array : back, join;
-import std.conv : to;
+import std.conv : to, text;
 import std.format : format;
 
 class Bar : Progress
@@ -25,7 +25,7 @@ class Bar : Progress
         fill = "#";
         hide_cursor = true;
         this.message = { return ""; };
-        this.suffix = { return format("%s/%s", this.index, this.max); };
+        this.suffix = { return format!"%s/%s"(this.index, this.max); };
         if (hide_cursor)
             file.write(HIDE_CURSOR);
     }
@@ -37,9 +37,8 @@ class Bar : Progress
         string message = this.message();
         string bar = repeat(this.fill, filled_length);
         string empty = repeat(this.empty_fill, empty_length);
-        string suffix = this.suffix();
-        string line = [message, this.bar_prefix, bar, empty, this.bar_suffix, suffix].join("");
-        this.writeln(line);
+        string suffix_ = this.suffix();
+        this.writeln(message, this.bar_prefix, bar, empty, this.bar_suffix, suffix_);
     }
 }
 
@@ -52,7 +51,7 @@ class ChargingBar : Bar
         bar_suffix = " ";
         empty_fill = "∙";
         fill = "█";
-        suffix = { return this.percent.to!string() ~ "%"; };
+        suffix = { return text(this.percent, '%'); };
     }
 }
 
@@ -97,10 +96,8 @@ class IncrementalBar : Bar
         string bar = repeat(phases.back, filled_length);
         string current = (phase <= nphases) ? this.phases[phase] : "";
         string empty = repeat(this.empty_fill, std.algorithm.max(0, empty_length));
-        string suffix = this.suffix();
-        string line = [message, this.bar_prefix, bar, current, empty, this.bar_suffix, suffix].join(
-                "");
-        this.writeln(line);
+        string suffix_ = this.suffix();
+        this.writeln(message, this.bar_prefix, bar, current, empty, this.bar_suffix, suffix_);
     }
 }
 

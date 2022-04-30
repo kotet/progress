@@ -47,9 +47,31 @@ private:
 
 protected:
     alias file = stderr;
+    void writeln(string[] s...)
+    {
+        import std.array : Appender;
+
+        static Appender!string buffer;
+        buffer.clear();
+
+        buffer.put(LINEFEED ~ ERASE_IN_LINE);
+        foreach (_; 0 .. _height)
+        {
+            buffer.put(CURSOR_UP ~ ERASE_IN_LINE);
+        }
+        size_t tempHeight = 0;
+        foreach (t; s)
+        {
+            buffer.put(t);
+            tempHeight = std.algorithm.count(t, '\n');
+        }
+        file.write(buffer.data);
+        _height = tempHeight;
+    }
+
     void writeln(string s)
     {
-        file.write(LINEFEED, ERASE_IN_LINE, repeat(CURSOR_UP ~ ERASE_IN_LINE, _height), s);
+        file.write(LINEFEED ~ ERASE_IN_LINE, repeat(CURSOR_UP ~ ERASE_IN_LINE, _height), s);
         _height = std.algorithm.count(s, "\n");
     }
 
