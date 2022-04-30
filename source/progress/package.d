@@ -7,8 +7,10 @@ public import progress.counter;
 public import progress.spinner;
 
 static import std.algorithm;
+import std.array : uninitializedArray;
 import std.concurrency : Generator, yield;
 import std.conv : to;
+import std.exception : assumeUnique;
 import std.math : ceil;
 import std.range.primitives : walkLength;
 import std.range : ElementType, isInfinite, isInputRange;
@@ -190,12 +192,13 @@ class Progress : Infinite
     }
 }
 
-package string repeat(string s, size_t n)
+package string repeat(string s, size_t n) pure nothrow @trusted
 {
-    string result;
-    foreach (i; 0 .. n)
+    immutable len = s.length;
+    auto buffer = uninitializedArray!(char[])(len * n);
+    for (size_t i, pos; i < n; i++, pos += len)
     {
-        result ~= s;
+        buffer[pos .. pos + len] = s[];
     }
-    return result;
+    return assumeUnique(buffer);
 }
