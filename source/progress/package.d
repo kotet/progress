@@ -49,8 +49,7 @@ protected:
     alias file = stderr;
     void writeln(string s)
     {
-        file.write(LINEFEED ~ ERASE_IN_LINE, repeat(CURSOR_UP ~ ERASE_IN_LINE, _height));
-        file.write(s);
+        file.write(LINEFEED, ERASE_IN_LINE, repeat(CURSOR_UP ~ ERASE_IN_LINE, _height), s);
         _height = std.algorithm.count(s, "\n");
     }
 
