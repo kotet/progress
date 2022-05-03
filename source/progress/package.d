@@ -51,7 +51,7 @@ protected:
     {
         import std.array : Appender;
 
-        static Appender!string buffer;
+        static Appender!(char[]) buffer;
         buffer.clear();
 
         buffer.put(LINEFEED ~ ERASE_IN_LINE);
