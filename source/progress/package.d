@@ -7,8 +7,10 @@ public import progress.counter;
 public import progress.spinner;
 
 static import std.algorithm;
+import std.array : uninitializedArray;
 import std.concurrency : Generator, yield;
 import std.conv : to;
+import std.exception : assumeUnique;
 import std.math : ceil;
 import std.range.primitives : walkLength;
 import std.range : ElementType, isInfinite, isInputRange;
@@ -45,10 +47,31 @@ private:
 
 protected:
     alias file = stderr;
+    void writeln(string[] s...)
+    {
+        import std.array : Appender;
+
+        static Appender!string buffer;
+        buffer.clear();
+
+        buffer.put(LINEFEED ~ ERASE_IN_LINE);
+        foreach (_; 0 .. _height)
+        {
+            buffer.put(CURSOR_UP ~ ERASE_IN_LINE);
+        }
+        size_t tempHeight = 0;
+        foreach (t; s)
+        {
+            buffer.put(t);
+            tempHeight = std.algorithm.count(t, '\n');
+        }
+        file.write(buffer.data);
+        _height = tempHeight;
+    }
+
     void writeln(string s)
     {
-        file.write(LINEFEED ~ ERASE_IN_LINE, repeat(CURSOR_UP ~ ERASE_IN_LINE, _height));
-        file.write(s);
+        file.write(LINEFEED ~ ERASE_IN_LINE, repeat(CURSOR_UP ~ ERASE_IN_LINE, _height), s);
         _height = std.algorithm.count(s, "\n");
     }
 
@@ -190,12 +213,13 @@ class Progress : Infinite
     }
 }
 
-package string repeat(string s, size_t n)
+package string repeat(string s, size_t n) pure nothrow @trusted
 {
-    string result;
-    foreach (i; 0 .. n)
+    immutable len = s.length;
+    auto buffer = uninitializedArray!(char[])(len * n);
+    for (size_t i, pos; i < n; i++, pos += len)
     {
-        result ~= s;
+        buffer[pos .. pos + len] = s[];
     }
-    return result;
+    return assumeUnique(buffer);
 }
