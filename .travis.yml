@@ -1,9 +1,0 @@
-language: d
-
-d:
-  - dmd
-  - dmd-2.074.1 # StopWatch
-  - ldc
-
-script:
-  - ./build.sh
