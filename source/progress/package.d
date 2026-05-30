@@ -76,7 +76,7 @@ protected:
     }
 
 public:
-    size_t index;
+    ulong index;
     bool hide_cursor = false;
     string delegate() message;
     Duration refresh_rate = dur!"seconds"(1) / 60;
@@ -132,7 +132,7 @@ public:
         file.writeln();
     }
 
-    void next(size_t n = 1)
+    void next(ulong n = 1)
     {
         if (n > 0)
         {
@@ -161,8 +161,8 @@ public:
 
 class Progress : Infinite
 {
-    size_t max;
-    this(size_t max = 100)
+    ulong max;
+    this(ulong max = 100)
     {
         this.max = max;
     }
@@ -182,7 +182,7 @@ class Progress : Infinite
         return std.algorithm.min(1, cast(real) this.index / this.max);
     }
 
-    @property size_t remaining()
+    @property ulong remaining()
     {
         return std.algorithm.max(this.max - this.index, 0);
     }
@@ -192,9 +192,9 @@ class Progress : Infinite
         this.force_update();
     }
 
-    void goto_index(size_t index)
+    void goto_index(ulong index)
     {
-        size_t incr = index - this.index;
+        ulong incr = index - this.index;
         this.next(incr);
     }
 
